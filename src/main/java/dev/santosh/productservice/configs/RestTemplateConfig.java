@@ -2,13 +2,17 @@ package dev.santosh.productservice.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 public class RestTemplateConfig {
 
     @Bean
-    public RestTemplate createRestTemplate() {
-        return new RestTemplate();
+    public RedisTemplate<String, Object> createRestTemplate(RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+
+        template.setConnectionFactory(redisConnectionFactory);
+        return template;
     }
 }
