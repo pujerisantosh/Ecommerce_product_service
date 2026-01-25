@@ -7,51 +7,54 @@ import dev.santosh.productservice.models.Product;
 import dev.santosh.productservice.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/products")
 public class ProductsControllers {
 
-    private ProductService productService;
+    private final ProductService productService;
 
-    public ProductsControllers(@Qualifier("selfProductService") ProductService productService) {
+    public ProductsControllers(
+            @Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
-
     }
 
-    @GetMapping("/products/{id}")
-    Product getSingleProduct(@PathVariable("id") long id) throws ProductNotFoundException {
+    // GET /products/{id}
+    @GetMapping("/{id}")
+    public Product getSingleProduct(@PathVariable long id)
+            throws ProductNotFoundException {
         return productService.getSingleProduct(id);
-
     }
 
-    @GetMapping("/products")
-    List<Product> getAllProducts() {
-
+    // GET /products
+    @GetMapping
+    public List<Product> getAllProducts() {
         return productService.getAllProduct();
     }
 
-
-    @GetMapping("/products/paginated")
-    Page<Product> getPaginatedProducts(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize) {
-
+    // GET /products/paginated?pageNo=0&pageSize=10
+    @GetMapping("/paginated")
+    public Page<Product> getPaginatedProducts(
+            @RequestParam int pageNo,
+            @RequestParam int pageSize) {
         return productService.getPaginatedProducts(pageNo, pageSize);
     }
 
-    @PostMapping("/products")
-    public Product createProduct(CreateProductRequestDTO createProductRequestDTO) {
-        return productService.createProduct(createProductRequestDTO.getTitle(),
-                createProductRequestDTO.getDescription(),
-                createProductRequestDTO.getImage(),
-                createProductRequestDTO.getCategory(),
-                createProductRequestDTO.getPrice());
+    // POST /products
+    @PostMapping
+    public Product createProduct(
+            @RequestBody CreateProductRequestDTO requestDTO) {
 
+        return productService.createProduct(
+                requestDTO.getTitle(),
+                requestDTO.getDescription(),
+                requestDTO.getImage(),
+                requestDTO.getCategory(),
+                requestDTO.getPrice()
+        );
     }
 
 }

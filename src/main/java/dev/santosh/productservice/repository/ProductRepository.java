@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
-@RestController
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // Derived queries
@@ -40,7 +40,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     getProductTitleAndPriceGivenTitle(
             @Param("title") String title
     );
-
-
 }
 
