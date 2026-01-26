@@ -142,17 +142,21 @@ Build Tool	Maven
 Version Control	Git
 IDE	IntelliJ IDEA
 🧱 Project Structure
-src/main/java/dev/santosh/productservice
-├── auth              # Authentication APIs
-├── controllers       # REST controllers
-├── services          # Business logic
-├── repository        # JPA repositories
-├── models            # JPA entities
-├── dtos              # Request/Response DTOs
-├── security          # Security configuration
-├── advices           # Global exception handling
-├── configs           # Redis & RestTemplate configs
-└── ProductServiceApplication.java
+
+🛠️ Tech Stack
+
+Layer            | Technology
+-----------------|-------------------------
+Language         | Java
+Framework        | Spring Boot
+API Style        | REST
+API Documentation| Swagger / OpenAPI
+ORM              | Spring Data JPA / Hibernate
+Database         | MySQL / H2 (In-Memory)
+Build Tool       | Maven
+Version Control  | Git
+IDE              | IntelliJ IDEA
+
 
 📡 Sample APIs
 ➕ Register User
@@ -178,6 +182,23 @@ Java 17+
 Maven
 
 MySQL (optional – H2 supported)
+
+
+
+📘 API Documentation (Swagger)
+
+This service exposes interactive API documentation using Swagger UI.
+
+Once the application is running, access Swagger here:
+
+http://localhost:8080/swagger-ui/index.html
+
+Benefits:
+- Live API testing
+- Clear request/response contracts
+- Faster frontend and QA integration
+- Industry-standard OpenAPI specification
+
 
 Steps
 git clone https://github.com/pujerisantosh/Ecommerce_product_service.git
