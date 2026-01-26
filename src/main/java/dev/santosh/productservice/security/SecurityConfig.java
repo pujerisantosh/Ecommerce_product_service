@@ -29,17 +29,24 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // 🔓 Auth APIs
                         .requestMatchers("/auth/**").permitAll()
+
+                        // 🔓 Swagger / OpenAPI
+                        .requestMatchers(
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**"
+                        ).permitAll()
+
+                        // 🔒 Everything else
                         .anyRequest().authenticated()
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(authenticationProvider()); // ✅ REQUIRED
+                );
+
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -59,10 +66,4 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-
-
-
-
-
-
 }
