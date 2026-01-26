@@ -1,206 +1,248 @@
-# 🛒 Ecommerce Product Service
+🛒 Ecommerce Product Service
 
-A production-grade **Ecommerce Product Service** built using **Java, Spring Boot, and RESTful APIs**.  
-This service is responsible for managing **products and categories** in an e-commerce platform and is designed with **scalability, clean architecture, and real-world backend practices** in mind.
+A production-ready Ecommerce Product Microservice built using Java, Spring Boot, Spring Security, JPA, Redis, and REST APIs, following clean architecture and real-world backend design principles.
 
----
+This service is designed the way product-based companies build backend systems — modular, scalable, testable, and secure.
 
-## 🚩 Problem Statement
+🎯 What Problem Does This Solve?
 
-In a typical e-commerce system, product-related operations such as:
-- Creating products
-- Categorizing products
-- Fetching product listings
-- Managing product metadata
+In real-world e-commerce platforms, product data must be:
 
-must be **fast, scalable, and reliable**.
+Fast to read
 
-Monolithic designs often lead to:
-- Tight coupling
-- Poor scalability
-- Difficult maintenance
+Consistent and reliable
 
-### ✅ Solution
+Secure
 
-This project solves the problem by implementing a **dedicated Product Microservice** that:
-- Manages products and categories independently
-- Exposes clean REST APIs
-- Uses normalized relational database design
-- Is ready to scale horizontally
+Easily scalable
 
----
+Independently deployable
 
-## 🧩 High-Level Architecture
+Traditional monolithic systems often fail due to:
 
+Tight coupling
 
-Client / Frontend
+Hard-to-scale product logic
+
+Difficult maintenance
+
+No clear ownership boundaries
+
+✅ Solution Approach
+
+This project implements a dedicated Product Microservice that:
+
+Owns product & category data
+
+Exposes clean REST APIs
+
+Uses proper relational modeling
+
+Supports authentication-ready architecture
+
+Is testable and extensible
+
+🧩 High-Level Architecture
+Client / API Consumer
 |
 v
 Product Service (Spring Boot)
-|
-v
-Relational Database (MySQL / H2)
+- Controllers
+- Services
+- Security
+- Repositories
+  |
+  v
+  Relational DB (MySQL / H2)
+  |
+  v
+  Redis (for caching – configured & ready)
 
+✨ Key Features (Implemented ✅)
+📦 Product Management
 
----
+Create products
 
-## ✨ Features
+Fetch all products
 
-- 📦 Product management (create, fetch)
-- 🗂️ Category management
-- 🔗 One-to-Many relationship between Category and Product
-- 🧠 Clean layered architecture
-- 🗄️ Relational database with foreign key constraints
-- 🕒 Audit fields for tracking creation and updates
-- 🧪 Easy to extend with caching (Redis), search, and pagination
+Fetch products by category
 
----
+Proper DTO-based request/response mapping
 
-## 🛠️ Tech Stack
+🗂️ Category Management
 
-| Layer | Technology |
-|-----|------------|
-| Language | Java |
-| Framework | Spring Boot |
-| API Style | REST |
-| ORM | Spring Data JPA / Hibernate |
-| Database | MySQL / H2 (In-Memory) |
-| Build Tool | Maven |
-| Version Control | Git |
-| IDE | IntelliJ IDEA |
+One-to-Many relationship (Category → Products)
 
----
+Foreign key constraints
 
-## 🗄️ Database Design
+Referential integrity enforced at DB level
 
-### 📂 Category Table
-Stores product categories.
+🔐 Authentication & Authorization (Completed ✅)
 
-| Column | Description |
-|-----|-------------|
-| `id` | Primary key |
-| `title` | Category name |
-| `created_at` | Creation timestamp |
-| `last_modified_at` | Last update timestamp |
-| `deleted` | Soft delete flag |
+User registration
 
----
+User login
 
-### 📦 Product Table
-Stores product details and maps each product to a category.
+Password encryption using BCrypt
 
-- Each product belongs to **one category**
-- Enforced using a **foreign key constraint**
+Spring Security configuration
 
-product.category_id → category.id
+Stateless authentication-ready setup
 
+JWT-based login flow implemented
 
+🔑 Note: Security is implemented the same way modern backend services do — decoupled, stateless, and extensible.
 
-### 🔗 Relationship
+🧠 Clean Architecture
 
-Category (1) → Product (Many)
+Controller → Service → Repository layering
 
+DTOs to avoid entity exposure
 
-### ✅ Design Benefits
-- Normalized schema
-- Referential integrity
-- Soft deletes for safety
-- Optimized for read-heavy workloads
+Global exception handling
 
----
+Validation-ready design
 
-## 📡 API Endpoints (Sample)
+🧪 Testing (Completed ✅)
 
-### ➕ Create Product
+Unit tests for service layer
 
+Integration tests for repositories
+
+Controller-level integration tests
+
+Test configuration using application-test.yml
+
+🗄️ Database Design
+
+Normalized schema
+
+Soft delete support
+
+Audit fields (created_at, updated_at)
+
+Foreign key constraints
+
+⚡ Redis (Configured & Ready)
+
+Redis template configuration added
+
+Cache-ready architecture for future read optimization
+
+🛠️ Tech Stack
+Layer	Technology
+Language	Java
+Framework	Spring Boot
+Security	Spring Security, BCrypt, JWT
+ORM	Spring Data JPA / Hibernate
+Database	MySQL / H2
+Cache	Redis (configured)
+Testing	JUnit, Spring Boot Test
+Build Tool	Maven
+Version Control	Git
+IDE	IntelliJ IDEA
+🧱 Project Structure
+src/main/java/dev/santosh/productservice
+├── auth              # Authentication APIs
+├── controllers       # REST controllers
+├── services          # Business logic
+├── repository        # JPA repositories
+├── models            # JPA entities
+├── dtos              # Request/Response DTOs
+├── security          # Security configuration
+├── advices           # Global exception handling
+├── configs           # Redis & RestTemplate configs
+└── ProductServiceApplication.java
+
+📡 Sample APIs
+➕ Register User
+POST /auth/register
+
+🔐 Login User
+POST /auth/login
+
+➕ Create Product
 POST /products
 
-
-### 📥 Get All Products
-
-
+📥 Get All Products
 GET /products
 
-
-### 📂 Get Products by Category
+📂 Get Products by Category
 GET /categories/{id}/products
 
+🚀 How to Run Locally
+Prerequisites
 
----
+Java 17+
 
-## 🧱 Project Structure
+Maven
 
-src/main/java
-└── com.example.productservice
-├── controller
-├── service
-├── repository
-├── model
-└── dto
+MySQL (optional – H2 supported)
 
-
-### Layer Responsibilities
-- **Controller** → API layer
-- **Service** → Business logic
-- **Repository** → Database access
-- **Model** → JPA entities
-- **DTOs** → Request/Response mapping
-
----
-
-## 🚀 How to Run Locally
-
-### Prerequisites
-- Java 17+
-- Maven
-
-### Steps
-```bash
+Steps
 git clone https://github.com/pujerisantosh/Ecommerce_product_service.git
 cd Ecommerce_product_service
-git checkout feature/product-api
 mvn spring-boot:run
 
-Application will start at:
+
+Application runs at:
+
 http://localhost:8080
 
-🔮 Future Enhancements
+🧪 Testing
+mvn test
 
-🔄 Redis caching for product reads
 
-🔍 Search & filtering
+Includes:
+
+Unit tests
+
+Integration tests
+
+Repository tests
+
+🔮 Planned Enhancements (Intentionally Pending 🚧)
+
+These are deliberately left out to show roadmap thinking:
+
+🔄 Redis caching for read-heavy APIs
+
+🔍 Advanced search & filtering
 
 📄 Pagination & sorting
 
-🧪 Unit and integration tests
-
-🔐 Authentication & authorization
-
 🌐 API Gateway integration
 
-🧵 Event-driven updates (Kafka)
+🧵 Event-driven communication (Kafka)
 
-🎯 Why This Project Matters
+📊 Metrics & monitoring
+
+🔐 Role-based authorization (ADMIN / USER)
+
+These features are easy to plug in due to current architecture.
+
+🎯 Why This Project Stands Out
 
 This project demonstrates:
 
 Real-world backend service design
 
-Clean code and layered architecture
+Production-style security configuration
 
-Database normalization and relationships
+Proper database modeling
 
-Readiness for microservices ecosystems
+Clean architecture principles
 
-It reflects how product-based companies design backend services.
+Test-driven mindset
+
+Microservice readiness
+
+It reflects how backend systems are designed in product-based companies.
 
 👨‍💻 Author
 
 Santosh Pujeri
 Backend / Software Engineer
+
 📧 Email: pujerisantosh.backend@gmail.com
-
 🔗 GitHub: https://github.com/pujerisantosh
-
-
-
