@@ -4,13 +4,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import dev.santosh.productservice.dtos.ErrorDTO;
 import dev.santosh.productservice.models.Product;
 import dev.santosh.productservice.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Transactional
 class ProductsControllerIT {
 
     @LocalServerPort
@@ -63,4 +60,58 @@ class ProductsControllerIT {
                 response.getBody().getMessage()
         );
     }
+
+
+    @Test
+    void shouldCreateProductSuccessfully() {
+
+        String url = "http://localhost:" + port + "/products";
+
+        String requestBody = """
+            {
+              "title": "iPhone 15",
+              "description": "Latest Apple phone",
+              "category": "Electronics",
+              "image": "iphone.png",
+              "price": 120000
+            }
+            """;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<Product> response =
+                restTemplate.postForEntity(url, entity, Product.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("iPhone 15", response.getBody().getTitle());
+    }
+
+    @Test
+    void shouldReturn400_whenInvalidProductRequest() {
+
+        String url = "http://localhost:" + port + "/products";
+
+        String requestBody = """
+            {
+              "description": "No title",
+              "category": "Electronics",
+              "price": -10
+            }
+            """;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<ErrorDTO> response =
+                restTemplate.postForEntity(url, request, ErrorDTO.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
 }

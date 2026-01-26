@@ -11,8 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
-import java.util.Optional;
+
 
 @Service("selfProductService")
 public class SelfProductService implements ProductService {
@@ -20,30 +21,31 @@ public class SelfProductService implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
-    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public SelfProductService(ProductRepository productRepository,
+                              CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
 
     @Override
     public Product getSingleProduct(long id) throws ProductNotFoundException {
-
-     Optional<Product> optionalProduct =  productRepository.findById(id);
-     if (optionalProduct.isEmpty()){
-         throw  new ProductNotFoundException("Product with  given id does not exist");
-     }
-     return optionalProduct.get();
+        return productRepository.findById(id)
+                .orElseThrow(() ->
+                        new ProductNotFoundException("Product with  given id does not exist"));
     }
 
     @Override
     public List<Product> getAllProduct() {
-
-        List<Product> products = productRepository.findAll();
-        return products;
+        return productRepository.findAll();
     }
 
     @Override
-    public Product createProduct(String title, String description, String image, String category, double price) {
+    public Product createProduct(
+            String title,
+            String description,
+            String image,
+            String category,
+            double price) {
 
         Product product = new Product();
         product.setTitle(title);
@@ -51,27 +53,27 @@ public class SelfProductService implements ProductService {
         product.setPrice(price);
         product.setImageUrl(image);
 
-
         Category categoryFromDb = categoryRepository.findByTitle(category);
 
-        if (categoryFromDb != null) {
+        if (categoryFromDb == null) {
             Category newCategory = new Category();
             newCategory.setTitle(category);
-            product.setCategory(newCategory);
-
-        } else {
-            product.setCategory(categoryFromDb);
-
+            categoryFromDb = categoryRepository.save(newCategory);
         }
-        return product;
+
+        product.setCategory(categoryFromDb);
+        return productRepository.save(product);
     }
 
     @Override
     public Page<Product> getPaginatedProducts(int pageNo, int pageSize) {
-        return productRepository.findAll(PageRequest.of(pageNo,
-                pageSize,
-                Sort.by("title").descending().and(Sort.by("price").ascending())));
+        return productRepository.findAll(
+                PageRequest.of(
+                        pageNo,
+                        pageSize,
+                        Sort.by("title").descending()
+                                .and(Sort.by("price").ascending())
+                )
+        );
     }
-
-
 }

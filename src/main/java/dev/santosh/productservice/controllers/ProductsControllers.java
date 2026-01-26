@@ -5,14 +5,17 @@ import dev.santosh.productservice.dtos.CreateProductRequestDTO;
 import dev.santosh.productservice.exceptions.ProductNotFoundException;
 import dev.santosh.productservice.models.Product;
 import dev.santosh.productservice.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@Validated
 public class ProductsControllers {
 
     private final ProductService productService;
@@ -46,7 +49,7 @@ public class ProductsControllers {
     // POST /products
     @PostMapping
     public Product createProduct(
-            @RequestBody CreateProductRequestDTO requestDTO) {
+           @Valid @RequestBody CreateProductRequestDTO requestDTO) {
 
         return productService.createProduct(
                 requestDTO.getTitle(),
